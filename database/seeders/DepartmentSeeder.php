@@ -12,6 +12,31 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Department::insert([
+            [
+                'name' => 'Administration',
+                'code' => 'ADMIN',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Human Resources',
+                'code' => 'HR',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Finance',
+                'code' => 'FIN',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Information Technology',
+                'code' => 'IT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }

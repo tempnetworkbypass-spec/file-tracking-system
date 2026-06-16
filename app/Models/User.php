@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'department_id',
+        'designation_id',
+        'employee_code',
+        'phone',
+        'is_active',
     ];
 
     /**
@@ -47,12 +54,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function department()
+
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
 
-    public function designation()
+    public function designation(): BelongsTo
     {
         return $this->belongsTo(Designation::class);
     }
