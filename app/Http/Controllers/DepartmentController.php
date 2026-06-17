@@ -28,7 +28,16 @@ class DepartmentController extends Controller
 
     public function store(Request $request)
     {
-        // later
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50',
+            'is_active' => 'required|boolean',
+        ]);
+
+        Department::create($request->all());
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department created successfully.');
     }
 
     public function show(Department $department)
@@ -43,6 +52,20 @@ class DepartmentController extends Controller
 
     public function update(Request $request, Department $department)
     {
-        // later
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $department->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect()
+            ->route('departments.index')
+            ->with('success', 'Department updated successfully.');
     }
 }

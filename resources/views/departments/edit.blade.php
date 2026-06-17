@@ -4,52 +4,42 @@
 
 <div style="max-width:600px; margin:auto; padding:20px;">
 
-    <h1 style="margin-bottom:20px;">
-        Create Department
-    </h1>
+    <h1>Edit Department</h1>
 
-    <form method="POST" action="{{ route('departments.store') }}">
+    <form method="POST" action="{{ route('departments.update', $department->id) }}">
         @csrf
+        @method('PUT')
 
-        <!-- Department Name -->
+        <!-- Name -->
         <div style="margin-bottom:15px;">
             <label>Department Name</label><br>
             <input type="text"
                 name="name"
-                value="{{ old('name') }}"
-                required
+                value="{{ old('name', $department->name) }}"
                 style="width:100%; padding:8px;">
-            @error('name')
-            <div style="color:red;">{{ $message }}</div>
-            @enderror
         </div>
 
-        <!-- Department Code -->
+        <!-- Code -->
         <div style="margin-bottom:15px;">
             <label>Department Code</label><br>
             <input type="text"
                 name="code"
-                value="{{ old('code') }}"
-                required
+                value="{{ old('code', $department->code) }}"
                 style="width:100%; padding:8px;">
-            @error('code')
-            <div style="color:red;">{{ $message }}</div>
-            @enderror
         </div>
 
         <!-- Status -->
         <div style="margin-bottom:15px;">
             <label>Status</label><br>
             <select name="is_active" style="width:100%; padding:8px;">
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
+                <option value="1" {{ $department->is_active ? 'selected' : '' }}>Active</option>
+                <option value="0" {{ !$department->is_active ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
 
-        <!-- Submit -->
         <button type="submit"
-            style="background:green; color:white; padding:10px 15px;">
-            Save Department
+            style="background:blue; color:white; padding:10px 15px;">
+            Update Department
         </button>
 
     </form>

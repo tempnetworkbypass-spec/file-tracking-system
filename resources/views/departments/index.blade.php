@@ -1,104 +1,82 @@
-<x-app-layout>
-    <div class="max-w-7xl mx-auto p-6">
+@extends('layouts.app')
 
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">
-                Departments
-            </h1>
+@section('content')
 
-            <a href="{{ route('departments.create') }}"
-                class="bg-blue-600 text-white px-4 py-2 rounded">
-                + Add Department
-            </a>
-        </div>
+<div style="padding:20px;">
 
-        <!-- Search Box -->
-        <form method="GET" action="{{ route('departments.index') }}" class="mb-4">
-            <input
-                type="text"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Search department..."
-                class="border rounded px-3 py-2 w-64">
+    <h1>Departments</h1>
 
-            <button
-                type="submit"
-                class="bg-gray-700 text-white px-4 py-2 rounded">
-                Search
-            </button>
-        </form>
+    <a href="{{ route('departments.create') }}">
+        + Add Department
+    </a>
 
-        <!-- Table -->
-        <div class="bg-white shadow rounded">
-            <table class="table-auto w-full border">
+    <br><br>
 
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 border">ID</th>
-                        <th class="px-4 py-2 border">Name</th>
-                        <th class="px-4 py-2 border">Code</th>
-                        <th class="px-4 py-2 border">Status</th>
-                        <th class="px-4 py-2 border">Actions</th>
-                    </tr>
-                </thead>
+    <form method="GET" action="{{ route('departments.index') }}">
+        <input type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Search department...">
 
-                <tbody>
-                    @forelse($departments as $department)
-                    <tr>
-                        <td class="px-4 py-2 border">{{ $department->id }}</td>
-                        <td class="px-4 py-2 border">{{ $department->name }}</td>
-                        <td class="px-4 py-2 border">{{ $department->code }}</td>
+        <button type="submit">Search</button>
+    </form>
 
-                        <!-- Status Badge -->
-                        <td class="px-4 py-2 border">
-                            @if($department->is_active)
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded">
-                                Active
-                            </span>
-                            @else
-                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded">
-                                Inactive
-                            </span>
-                            @endif
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="px-4 py-2 border">
-                            <a href="{{ route('departments.edit', $department) }}"
-                                class="text-blue-600 mr-2">
-                                Edit
-                            </a>
-
-                            <form action="{{ route('departments.destroy', $department) }}"
-                                method="POST"
-                                class="inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button onclick="return confirm('Delete this department?')"
-                                    class="text-red-600">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center py-4 text-gray-500">
-                            No departments found.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="mt-4">
-            {{ $departments->links() }}
-        </div>
-
+    <br>
+    @if(session('success'))
+    <div style="color:green;">
+        {{ session('success') }}
     </div>
-</x-app-layout>
+    @endif
+    <table border="2 px" cellpadding="10">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @forelse($departments as $department)
+            <tr>
+                <td>{{ $department->id }}</td>
+                <td>{{ $department->name }}</td>
+                <td>{{ $department->code }}</td>
+                <td>
+                    {{ $department->is_active ? 'Active' : 'Inactive' }}
+                </td>
+
+                <td>
+                    <a href="{{ route('departments.edit', $department->id) }}">
+                        Edit
+                    </a>
+
+                    <form action="{{ route('departments.destroy', $department->id) }}"
+                        method="POST"
+                        style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+
+                        <button onclick="return confirm('Delete?')">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="5">No departments found</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <br>
+
+    {{ $departments->links() }}
+
+</div>
+
+@endsection
