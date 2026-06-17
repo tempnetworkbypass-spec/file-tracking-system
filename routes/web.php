@@ -9,6 +9,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\FileRecordController;
 use App\Http\Controllers\FileTransferController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\TransferApprovalController;
 
 // ADMIN CONTROLLERS (IMPORT THESE)
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -87,6 +88,54 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
 Route::prefix('admin')->middleware('role:admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
+
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/file-transfer/{file}', [FileTransferController::class, 'create'])
+//         ->name('file-transfer.create');
+
+//     Route::post('/file-transfer', [FileTransferController::class, 'store'])
+//         ->name('file-transfer.store');
+// });
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/files/{file}/transfer',
+        [FileTransferController::class, 'create']
+    )->name('files.transfer.create');
+
+    Route::post(
+        '/files/transfer',
+        [FileTransferController::class, 'store']
+    )->name('files.transfer.store');
+});
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->group(function () {
+
+        Route::get(
+            '/transfer-requests',
+            [TransferApprovalController::class, 'index']
+        )->name('transfer.requests');
+
+        Route::post(
+            '/transfer-requests/{id}/approve',
+            [TransferApprovalController::class, 'approve']
+        )->name('transfer.approve');
+
+        Route::post(
+            '/transfer-requests/{id}/reject',
+            [TransferApprovalController::class, 'reject']
+        )->name('transfer.reject');
+    });
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::resource('files', FileRecordController::class);
+});
+
 /*
 |--------------------------------------------------------------------------
 | LOGOUT

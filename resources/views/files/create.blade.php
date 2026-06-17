@@ -1,29 +1,51 @@
-<x-app-layout>
-    <div class="max-w-3xl mx-auto p-6">
+@extends('layouts.app')
 
-        <h2 class="text-xl font-bold mb-4">Create File</h2>
+@section('content')
 
-        <form method="POST" action="{{ route('files.store') }}">
-            @csrf
+<div class="container">
 
-            <input type="text" name="file_name" placeholder="File Name"
-                class="border p-2 w-full mb-2">
+    <h2>Create File</h2>
 
-            <select name="department_id" class="border p-2 w-full mb-2">
+    <form action="{{ route('files.store') }}" method="POST">
+
+        @csrf
+
+        <div class="mb-3">
+            <label>Department</label>
+
+            <select name="department_id" class="form-control" required>
                 <option value="">Select Department</option>
-                @foreach($departments as $d)
-                <option value="{{ $d->id }}">{{ $d->name }}</option>
+
+                @foreach($departments as $department)
+                <option value="{{ $department->id }}">
+                    {{ $department->name }}
+                </option>
                 @endforeach
             </select>
+        </div>
 
-            <textarea name="remarks" placeholder="Remarks"
-                class="border p-2 w-full mb-2"></textarea>
+        <div class="mb-3">
+            <label>File Name</label>
 
-            <button class="bg-blue-600 text-white px-4 py-2">
-                Create File
-            </button>
+            <input type="text"
+                name="file_name"
+                class="form-control"
+                required>
+        </div>
 
-        </form>
+        <div class="mb-3">
+            <label>Remarks</label>
 
-    </div>
-</x-app-layout>
+            <textarea name="remarks"
+                class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save File
+        </button>
+
+    </form>
+
+</div>
+
+@endsection

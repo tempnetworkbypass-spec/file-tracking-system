@@ -12,6 +12,8 @@ class FileTransfer extends Model
         'file_record_id',
         'from_user_id',
         'to_user_id',
+        'from_department_id',
+        'to_department_id',
         'remarks',
     ];
 
@@ -29,4 +31,15 @@ class FileTransfer extends Model
     {
         return $this->belongsTo(User::class, 'to_user_id');
     }
+
+    public function fromDepartment()
+    {
+        return $this->belongsTo(Department::class, 'from_department_id');
+    }
+
+    public function toDepartment()
+    {
+        return $this->belongsTo(Department::class, 'to_department_id');
+    }
+
 }

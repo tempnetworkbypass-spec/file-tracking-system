@@ -19,32 +19,44 @@
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex sm:ms-10 space-x-8">
 
+                    {{-- Dashboard (all users) --}}
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         Dashboard
                     </x-nav-link>
 
-                    @auth
-                    @if(auth()->user()->role === 'super_admin' || auth()->user()->role === 'admin')
+                    @if(auth()->check())
+                    <x-nav-link :href="route('files.index')" :active="request()->routeIs('files.*')">
+                        Files
+                    </x-nav-link>
+                    @endif
+
+                    {{-- Super Admin only --}}
+                    @if(auth()->check() && auth()->user()->role === 'super_admin')
+
                     <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
                         Departments
                     </x-nav-link>
-                    @endif
-                    @endauth
 
-                    @if(auth()->user()->role === 'super_admin' || auth()->user()->role === 'admin')
                     <x-nav-link :href="route('designations.index')" :active="request()->routeIs('designations.*')">
                         Designations
                     </x-nav-link>
+
                     @endif
 
+                    {{-- Admin only --}}
+                    @if(auth()->check() && auth()->user()->role === 'admin')
 
-                    @if(auth()->user()->role === 'admin')
-                    <x-nav-link :href="route('admin.dashboard')">
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                         Admin Dashboard
                     </x-nav-link>
-                    @endif
-                </div>
 
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                        Users
+                    </x-nav-link>
+
+                    @endif
+
+                </div>
                 <!-- Desktop User Menu -->
                 @auth
                 <div class="hidden sm:flex sm:items-center sm:ms-6">

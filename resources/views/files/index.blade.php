@@ -1,34 +1,45 @@
-<x-app-layout>
-    <div class="max-w-6xl mx-auto p-6">
+@extends('layouts.app')
 
-        <h2 class="text-xl font-bold mb-4">Files</h2>
+@section('content')
 
-        <a href="{{ route('files.create') }}"
-            class="bg-blue-600 text-white px-4 py-2 rounded">
-            + Create File
-        </a>
+<div class="container">
 
-        <table class="w-full mt-4 border">
-            <thead>
-                <tr>
-                    <th class="border p-2">File No</th>
-                    <th class="border p-2">Name</th>
-                    <th class="border p-2">Department</th>
-                    <th class="border p-2">Creator</th>
-                </tr>
-            </thead>
+    <h2>Files</h2>
 
-            <tbody>
-                @foreach($files as $file)
-                <tr>
-                    <td class="border p-2">{{ $file->file_number }}</td>
-                    <td class="border p-2">{{ $file->file_name }}</td>
-                    <td class="border p-2">{{ $file->department->name }}</td>
-                    <td class="border p-2">{{ $file->creator->name }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <a href="{{ route('files.create') }}"
+        class="btn btn-primary mb-3">
+        + Create File
+    </a>
 
-    </div>
-</x-app-layout>
+    <table class="table">
+
+        <tr>
+            <th>ID</th>
+            <th>File Name</th>
+            <th>File Number</th>
+            <th>Department</th>
+            <th>Action</th>
+        </tr>
+
+        @foreach($files as $file)
+
+        <tr>
+            <td>{{ $file->id }}</td>
+            <td>{{ $file->file_name }}</td>
+            <td>{{ $file->file_number }}</td>
+            <td>{{ $file->department->name ?? 'N/A' }}</td>
+            <td>
+                <a href="{{ route('files.transfer.create', $file->id) }}"
+                    class="btn btn-primary">
+                    Send File
+                </a>
+            </td>
+        </tr>
+
+        @endforeach
+
+    </table>
+
+</div>
+
+@endsection

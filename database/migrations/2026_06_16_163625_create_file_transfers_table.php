@@ -1,37 +1,44 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('file_transfers', function (Blueprint $table) {
-
             $table->id();
 
-            $table->foreignId('file_id');
+            // File being transferred
+            $table->foreignId('file_record_id')
+                ->constrained('file_records')
+                ->onDelete('cascade');
 
-            $table->foreignId('sender_id');
+            // Transfer tracking
+            $table->foreignId('from_user_id')
+                ->constrained('users')
+                ->onDelete('cascade');
 
-            $table->foreignId('receiver_id');
+            $table->foreignId('to_user_id')
+                ->constrained('users')
+                ->onDelete('cascade');
+
+            // Department tracking (important for SRS)
+            $table->foreignId('from_department_id')
+                ->constrained('departments')
+                ->onDelete('cascade');
+
+            $table->foreignId('to_department_id')
+                ->constrained('departments')
+                ->onDelete('cascade');
 
             $table->text('remarks')->nullable();
-
-            $table->timestamp('transferred_at');
 
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('file_transfers');

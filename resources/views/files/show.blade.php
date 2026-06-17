@@ -1,31 +1,108 @@
-<x-app-layout>
-    <div class="max-w-4xl mx-auto p-6">
+@extends('layouts.app')
 
-        <h2 class="text-xl font-bold mb-4">
-            File History: {{ $file->file_number }}
-        </h2>
+@section('content')
 
-        <p><b>Name:</b> {{ $file->file_name }}</p>
+<div class="container">
 
-        <h3 class="mt-4 font-bold">Transfer History</h3>
+    <h2>File Tracking Details</h2>
 
-        <table class="w-full border mt-2">
+    <hr>
+
+    <h4>File Information</h4>
+
+    <p>
+        <strong>File Name:</strong>
+        {{ $file->file_name }}
+    </p>
+
+    <p>
+        <strong>File Number:</strong>
+        {{ $file->file_number }}
+    </p>
+
+    <p>
+        <strong>Department:</strong>
+        {{ $file->department->name ?? 'N/A' }}
+    </p>
+
+    <p>
+        <strong>Created By:</strong>
+        {{ $file->creator->name ?? 'N/A' }}
+    </p>
+
+    <p>
+        <strong>Current Holder:</strong>
+        {{ $file->currentHolder->name ?? 'N/A' }}
+    </p>
+
+    <p>
+        <strong>Created At:</strong>
+        {{ $file->created_at }}
+    </p>
+
+    <hr>
+
+    <h4>Transfer History</h4>
+
+    <table class="table table-bordered">
+
+        <thead>
             <tr>
-                <th class="border p-2">From</th>
-                <th class="border p-2">To</th>
-                <th class="border p-2">Remarks</th>
-                <th class="border p-2">Date</th>
+                <th>Date</th>
+                <th>From User</th>
+                <th>To User</th>
+                <th>From Department</th>
+                <th>To Department</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @forelse($file->transfers as $transfer)
+
+            <tr>
+
+                <td>
+                    {{ $transfer->created_at }}
+                </td>
+
+                <td>
+                    {{ $transfer->fromUser->name ?? 'N/A' }}
+                </td>
+
+                <td>
+                    {{ $transfer->toUser->name ?? 'N/A' }}
+                </td>
+
+                <td>
+                    {{ $transfer->fromDepartment->name ?? 'N/A' }}
+                </td>
+
+                <td>
+                    {{ $transfer->toDepartment->name ?? 'N/A' }}
+                </td>
+
+                <td>
+                    {{ $transfer->remarks }}
+                </td>
+
             </tr>
 
-            @foreach($file->transfers as $t)
-            <tr>
-                <td class="border p-2">{{ $t->fromUser->name }}</td>
-                <td class="border p-2">{{ $t->toUser->name }}</td>
-                <td class="border p-2">{{ $t->remarks }}</td>
-                <td class="border p-2">{{ $t->created_at }}</td>
-            </tr>
-            @endforeach
-        </table>
+            @empty
 
-    </div>
-</x-app-layout>
+            <tr>
+                <td colspan="6">
+                    No transfer history available.
+                </td>
+            </tr>
+
+            @endforelse
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@endsection
