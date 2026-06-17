@@ -56,6 +56,45 @@
 
                     @endif
 
+
+                    {{-- SUPER ADMIN --}}
+                    @if(auth()->user()->role === 'super_admin')
+
+                    <x-nav-link :href="route('departments.index')">
+                        Departments
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('designations.index')">
+                        Designations
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('users.index')">
+                        Admin Users
+                    </x-nav-link>
+
+                    @endif
+
+
+                    @if(auth()->user()->role === 'admin')
+
+                    <x-nav-link :href="route('admin.dashboard')">
+                        Admin Dashboard
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('users.index')">
+                        Users
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('admin.files')">
+                        Files
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('transfer.requests')">
+                        Transfer Requests
+                    </x-nav-link>
+
+                    @endif
+
                 </div>
                 <!-- Desktop User Menu -->
                 @auth

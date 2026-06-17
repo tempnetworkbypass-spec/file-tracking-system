@@ -131,20 +131,63 @@ Route::middleware(['auth', 'role:admin'])
         )->name('transfer.reject');
     });
 
-Route::middleware(['auth'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| FILE TRANSFER
+|--------------------------------------------------------------------------
+*/
 
-    Route::resource('files', FileRecordController::class);
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/files/{file}/transfer',
+        [FileTransferController::class, 'create']
+    )->name('files.transfer.create');
+
+    Route::post(
+        '/files/transfer',
+        [FileTransferController::class, 'store']
+    )->name('files.transfer.store');
 });
+
+/*
+|--------------------------------------------------------------------------
+| TRANSFER APPROVAL (ADMIN)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->group(function () {
+
+        Route::get(
+            '/transfer-requests',
+            [TransferApprovalController::class, 'index']
+        )->name('transfer.requests');
+
+        Route::post(
+            '/transfer-requests/{id}/approve',
+            [TransferApprovalController::class, 'approve']
+        )->name('transfer.approve');
+
+        Route::post(
+            '/transfer-requests/{id}/reject',
+            [TransferApprovalController::class, 'reject']
+        )->name('transfer.reject');
+    });
 
 /*
 |--------------------------------------------------------------------------
 | LOGOUT
 |--------------------------------------------------------------------------
 */
+
 Route::post('/logout', function () {
     Auth::logout();
+
     request()->session()->invalidate();
     request()->session()->regenerateToken();
+
     return redirect('/');
 })->name('logout');
 
