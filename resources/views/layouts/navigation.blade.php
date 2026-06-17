@@ -19,81 +19,71 @@
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex sm:ms-10 space-x-8">
 
-                    {{-- Dashboard (all users) --}}
+                    {{-- Dashboard --}}
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         Dashboard
                     </x-nav-link>
 
-                    @if(auth()->check())
+                    {{-- All logged-in users --}}
+                    @auth
+
                     <x-nav-link :href="route('files.index')" :active="request()->routeIs('files.*')">
                         Files
                     </x-nav-link>
-                    @endif
-
-                    {{-- Super Admin only --}}
-                    @if(auth()->check() && auth()->user()->role === 'super_admin')
-
-                    <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
-                        Departments
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('designations.index')" :active="request()->routeIs('designations.*')">
-                        Designations
-                    </x-nav-link>
-
-                    @endif
-
-                    {{-- Admin only --}}
-                    @if(auth()->check() && auth()->user()->role === 'admin')
-
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                        Admin Dashboard
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                        Users
-                    </x-nav-link>
-
-                    @endif
-
 
                     {{-- SUPER ADMIN --}}
                     @if(auth()->user()->role === 'super_admin')
 
-                    <x-nav-link :href="route('departments.index')">
+                    <x-nav-link
+                        :href="route('departments.index')"
+                        :active="request()->routeIs('departments.*')">
                         Departments
                     </x-nav-link>
 
-                    <x-nav-link :href="route('designations.index')">
+                    <x-nav-link
+                        :href="route('designations.index')"
+                        :active="request()->routeIs('designations.*')">
                         Designations
                     </x-nav-link>
 
-                    <x-nav-link :href="route('users.index')">
+                    <x-nav-link
+                        :href="route('users.index')"
+                        :active="request()->routeIs('users.*')">
                         Admin Users
                     </x-nav-link>
 
                     @endif
 
-
+                    {{-- ADMIN --}}
                     @if(auth()->user()->role === 'admin')
 
-                    <x-nav-link :href="route('admin.dashboard')">
+                    <x-nav-link
+                        :href="route('admin.dashboard')"
+                        :active="request()->routeIs('admin.dashboard')">
                         Admin Dashboard
                     </x-nav-link>
 
-                    <x-nav-link :href="route('users.index')">
+                    <x-nav-link
+                        :href="route('users.index')"
+                        :active="request()->routeIs('users.*')">
                         Users
                     </x-nav-link>
 
-                    <x-nav-link :href="route('admin.files')">
-                        Files
+                    <x-nav-link
+                        :href="route('admin.files')"
+                        :active="request()->routeIs('admin.files')">
+                        Department Files
                     </x-nav-link>
 
-                    <x-nav-link :href="route('transfer.requests')">
+                    <x-nav-link
+                        :href="route('transfer.requests')"
+                        :active="request()->routeIs('transfer.requests')">
                         Transfer Requests
                     </x-nav-link>
 
                     @endif
+
+                    @endauth
 
                 </div>
                 <!-- Desktop User Menu -->
@@ -192,6 +182,8 @@
         </div>
 
         <!-- Responsive Navigation Menu -->
+
+        <!-- Responsive Navigation Menu -->
         <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
 
             <div class="pt-2 pb-3 space-y-1">
@@ -199,14 +191,68 @@
                 <x-responsive-nav-link
                     :href="route('dashboard')"
                     :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
+                    Dashboard
                 </x-responsive-nav-link>
+
+                @auth
+
+                <x-responsive-nav-link
+                    :href="route('files.index')"
+                    :active="request()->routeIs('files.*')">
+                    Files
+                </x-responsive-nav-link>
+
+                {{-- SUPER ADMIN --}}
+                @if(auth()->user()->role === 'super_admin')
 
                 <x-responsive-nav-link
                     :href="route('departments.index')"
                     :active="request()->routeIs('departments.*')">
-                    {{ __('Departments') }}
+                    Departments
                 </x-responsive-nav-link>
+
+                <x-responsive-nav-link
+                    :href="route('designations.index')"
+                    :active="request()->routeIs('designations.*')">
+                    Designations
+                </x-responsive-nav-link>
+
+                <x-nav-link :href="route('users.index')">
+                    Admin Users
+                </x-nav-link>
+
+                <x-nav-link :href="route('users.create')">
+                    Create Admin
+                </x-nav-link>
+
+                @endif
+
+                {{-- ADMIN --}}
+                @if(auth()->user()->role === 'admin')
+
+                <x-nav-link :href="route('admin.users.index')">
+                    Users
+                </x-nav-link>
+
+                <x-nav-link :href="route('admin.files')">
+                    Files
+                </x-nav-link>
+                
+                <x-responsive-nav-link
+                    :href="route('admin.files')"
+                    :active="request()->routeIs('admin.files')">
+                    Department Files
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link
+                    :href="route('transfer.requests')"
+                    :active="request()->routeIs('transfer.requests')">
+                    Transfer Requests
+                </x-responsive-nav-link>
+
+                @endif
+
+                @endauth
 
             </div>
 
@@ -216,15 +262,15 @@
                 <div class="px-4">
 
                     <div class="font-medium text-base text-gray-800 dark:text-gray-200">
-                        {{ Auth::user()?->name }}
+                        {{ Auth::user()->name }}
                     </div>
 
                     <div class="font-medium text-sm text-gray-500">
-                        {{ Auth::user()?->email }}
+                        {{ Auth::user()->email }}
                     </div>
 
                     <div class="font-medium text-sm text-blue-600">
-                        {{ Auth::user()?->department?->name ?? 'No Department' }}
+                        {{ Auth::user()->department?->name ?? 'No Department' }}
                     </div>
 
                 </div>
@@ -232,7 +278,7 @@
                 <div class="mt-3 space-y-1">
 
                     <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
+                        Profile
                     </x-responsive-nav-link>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -241,7 +287,7 @@
                         <x-responsive-nav-link
                             :href="route('logout')"
                             onclick="event.preventDefault(); this.closest('form').submit();">
-                            {{ __('Log Out') }}
+                            Log Out
                         </x-responsive-nav-link>
 
                     </form>

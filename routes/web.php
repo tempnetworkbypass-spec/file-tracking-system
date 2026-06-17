@@ -65,23 +65,28 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
 | ADMIN MODULE
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
-    Route::resource('users', AdminUserController::class);
-    Route::resource('designations', AdminDesignationController::class);
-    Route::get('/files', [AdminFileController::class, 'index'])
-        ->name('admin.files');
-});
+        Route::resource('users', AdminUserController::class);
+
+        Route::resource('designations', AdminDesignationController::class);
+
+        Route::get('/files', [AdminFileController::class, 'index'])
+            ->name('files');
+    });
 
 /*
 |--------------------------------------------------------------------------
 | SHARED (Super Admin + Admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::resource('users', UserController::class);
 });
 
@@ -131,6 +136,14 @@ Route::middleware(['auth', 'role:admin'])
         )->name('transfer.reject');
     });
 
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('users', AdminUserController::class);
+    });
 /*
 |--------------------------------------------------------------------------
 | FILE TRANSFER

@@ -1,41 +1,87 @@
-<x-app-layout>
-    <div class="max-w-3xl mx-auto p-6">
+@extends('layouts.app')
 
-        <h2 class="text-xl font-bold mb-4">Create User</h2>
+@section('content')
 
-        <form method="POST" action="{{ route('users.store') }}">
-            @csrf
+<div class="container">
 
-            <input type="text" name="name" placeholder="Name" class="border p-2 w-full mb-2">
+    <h2>Create Admin User</h2>
 
-            <input type="email" name="email" placeholder="Email" class="border p-2 w-full mb-2">
+    <form method="POST"
+        action="{{ route('users.store') }}">
 
-            <input type="password" name="password" placeholder="Password" class="border p-2 w-full mb-2">
+        @csrf
 
-            <select name="role" class="border p-2 w-full mb-2">
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
+        <div class="mb-3">
+            <label>Name</label>
 
-            <select name="department_id" class="border p-2 w-full mb-2">
-                <option value="">Select Department</option>
-                @foreach($departments as $d)
-                <option value="{{ $d->id }}">{{ $d->name }}</option>
+            <input type="text"
+                name="name"
+                class="form-control"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+
+            <input type="email"
+                name="email"
+                class="form-control"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+
+            <input type="password"
+                name="password"
+                class="form-control"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label>Department</label>
+
+            <select name="department_id"
+                class="form-control">
+
+                @foreach($departments as $department)
+
+                <option value="{{ $department->id }}">
+                    {{ $department->name }}
+                </option>
+
                 @endforeach
-            </select>
 
-            <select name="designation_id" class="border p-2 w-full mb-2">
-                <option value="">Select Designation</option>
-                @foreach($designations as $des)
-                <option value="{{ $des->id }}">{{ $des->name }}</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Designation</label>
+
+            <select name="designation_id"
+                class="form-control">
+
+                @foreach($designations as $designation)
+
+                <option value="{{ $designation->id }}">
+                    {{ $designation->name }}
+                </option>
+
                 @endforeach
+
             </select>
+        </div>
 
-            <button class="bg-blue-600 text-white px-4 py-2">
-                Create User
-            </button>
+        <input type="hidden"
+            name="role"
+            value="admin">
 
-        </form>
+        <button class="btn btn-success">
+            Create Admin
+        </button>
 
-    </div>
-</x-app-layout>
+    </form>
+
+</div>
+
+@endsection

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\TransferRequest;
 use Illuminate\Http\Request;
+
 class TransferApprovalController extends Controller
 {
     //
