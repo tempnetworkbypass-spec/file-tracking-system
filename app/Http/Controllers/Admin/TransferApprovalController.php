@@ -12,10 +12,10 @@ class TransferApprovalController extends Controller
     //
     public function index()
     {
-        $requests = TransferRequest::where(
-            'to_department',
-            auth()->user()->department_id
-        )->latest()->get();
+        $requests = TransferRequest::where('to_department', auth()->user()->department_id)
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
 
         return view(
             'admin.transfer_requests.index',
@@ -28,27 +28,26 @@ class TransferApprovalController extends Controller
 
         $file = FileRecord::findOrFail($request->file_id);
 
-        $file->current_holder =
-            $request->target_user;
-
-        $file->department_id =
-            $request->to_department;
-
+        $file->current_holder = $request->target_user;
+        $file->department_id = $request->to_department;
         $file->save();
 
         $request->update([
             'status' => 'approved'
         ]);
 
-        return back();
+        return redirect()
+            ->route('admin.transfer.requests')
+            ->with('success', 'Transfer approved successfully');
     }
     public function reject($id)
     {
-        TransferRequest::findOrFail($id)
-            ->update([
-                'status' => 'rejected'
-            ]);
+        TransferRequest::findOrFail($id)->update([
+            'status' => 'rejected'
+        ]);
 
-        return back();
+        return redirect()
+            ->route('admin.transfer.requests')
+            ->with('success', 'Transfer rejected successfully');
     }
 }
