@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+// use App/Http/Controllers/Admin/AdminUserController;
 
 class AdminUserController extends Controller
 {
@@ -22,8 +23,10 @@ class AdminUserController extends Controller
 
     public function create()
     {
-        $designations = Designation::where('department_id', auth()->user()->department_id)->get();
-
+        $designations = Designation::where(
+            'department_id',
+            auth()->user()->department_id
+        )->get();
         return view('admin.users.create', compact('designations'));
     }
 
@@ -45,7 +48,7 @@ class AdminUserController extends Controller
             'role' => 'user'
         ]);
 
-        return redirect()->route('users.index')
+        return redirect()->route('/admin/users')
             ->with('success', 'User created successfully');
     }
 
@@ -73,7 +76,7 @@ class AdminUserController extends Controller
             'designation_id' => $request->designation_id,
         ]);
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully');
     }
 
@@ -81,7 +84,7 @@ class AdminUserController extends Controller
     {
         User::findOrFail($id)->delete();
 
-        return redirect()->route('users.index')
+        return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully');
     }
 }

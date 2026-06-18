@@ -6,7 +6,7 @@
 
     <h1 class="text-xl font-bold mb-4">Users</h1>
 
-    <a href="{{ route('users.create') }}" class="bg-blue-500 text-white px-3 py-2">
+    <a href="{{ route('admin.users.create') }}">
         + Add User
     </a>
 

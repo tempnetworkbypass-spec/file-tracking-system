@@ -5,7 +5,15 @@
 <div class="container">
 
     <h2>Create User</h2>
-
+    @if ($errors->any())
+    <div>
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <form method="POST" action="{{ route('users.store') }}">
         @csrf
 
@@ -24,16 +32,8 @@
             placeholder="Password"
             class="form-control mb-2">
 
-        <select name="designation_id" class="form-control mb-2">
-
-            @foreach($designations as $designation)
-
-            <option value="{{ $designation->id }}">
-                {{ $designation->name }}
-            </option>
-
-            @endforeach
-
+        <select name="role">
+            <option value="user">User</option>
         </select>
 
         <button class="btn btn-primary">

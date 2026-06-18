@@ -46,25 +46,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/file-transfer', [FileTransferController::class, 'store'])->name('files.transfer');
 });
 
-/*
-|--------------------------------------------------------------------------
-| SUPER ADMIN ONLY
-|--------------------------------------------------------------------------
-*/
-// SUPER ADMIN ONLY
-Route::middleware(['auth', 'super_admin'])->group(function () {
-    Route::resource('departments', DepartmentController::class);
-});
 
-// SUPER ADMIN + ADMIN
 Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::resource('designations', DesignationController::class);
 });
-/*
-|--------------------------------------------------------------------------
-| ADMIN MODULE
-|--------------------------------------------------------------------------
-*/
+
+
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::resource('departments', DepartmentController::class);
+       Route::resource('users', UserController::class);
+});
+
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -79,46 +71,6 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/files', [AdminFileController::class, 'index'])
             ->name('files');
-    });
-
-/*
-|--------------------------------------------------------------------------
-| SHARED (Super Admin + Admin)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:super_admin'])->group(function () {
-    Route::resource('users', UserController::class);
-});
-
-Route::prefix('admin')->middleware('role:admin')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-});
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/file-transfer/{file}', [FileTransferController::class, 'create'])
-//         ->name('file-transfer.create');
-
-//     Route::post('/file-transfer', [FileTransferController::class, 'store'])
-//         ->name('file-transfer.store');
-// });
-
-
-Route::middleware('auth')->group(function () {
-
-    Route::get(
-        '/files/{file}/transfer',
-        [FileTransferController::class, 'create']
-    )->name('files.transfer.create');
-
-    Route::post(
-        '/files/transfer',
-        [FileTransferController::class, 'store']
-    )->name('files.transfer.store');
-});
-
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->group(function () {
 
         Route::get(
             '/transfer-requests',
@@ -137,18 +89,6 @@ Route::middleware(['auth', 'role:admin'])
     });
 
 
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::resource('users', AdminUserController::class);
-    });
-/*
-|--------------------------------------------------------------------------
-| FILE TRANSFER
-|--------------------------------------------------------------------------
-*/
 
 Route::middleware('auth')->group(function () {
 
@@ -162,38 +102,6 @@ Route::middleware('auth')->group(function () {
         [FileTransferController::class, 'store']
     )->name('files.transfer.store');
 });
-
-/*
-|--------------------------------------------------------------------------
-| TRANSFER APPROVAL (ADMIN)
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->group(function () {
-
-        Route::get(
-            '/transfer-requests',
-            [TransferApprovalController::class, 'index']
-        )->name('transfer.requests');
-
-        Route::post(
-            '/transfer-requests/{id}/approve',
-            [TransferApprovalController::class, 'approve']
-        )->name('transfer.approve');
-
-        Route::post(
-            '/transfer-requests/{id}/reject',
-            [TransferApprovalController::class, 'reject']
-        )->name('transfer.reject');
-    });
-
-/*
-|--------------------------------------------------------------------------
-| LOGOUT
-|--------------------------------------------------------------------------
-*/
 
 Route::post('/logout', function () {
     Auth::logout();
