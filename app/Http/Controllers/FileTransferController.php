@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\TransferRequest;
 use App\Notifications\FileTransferredNotification;
 use App\Events\FileTransferred;
-
+use App\Models\FileMovement;
 class FileTransferController extends Controller
 {
     public function create($fileId)
@@ -57,6 +57,15 @@ class FileTransferController extends Controller
                 'to_department' => $targetUser->department_id,
                 'target_user' => $targetUser->id,
                 'status' => 'pending'
+            ]);
+            FileMovement::create([
+                'file_id' => $file->id,
+                'from_user' => auth()->id(),
+                'to_user' => $targetUser->id,
+                'from_department' => auth()->user()->department_id,
+                'to_department' => $targetUser->department_id,
+                'action' => 'requested',
+                'remarks' => 'Transfer request submitted'
             ]);
             $file->update([
                 'status' => 'pending_transfer'

@@ -62,6 +62,7 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Action</th>
                 <th>From User</th>
                 <th>To User</th>
                 <th>From Department</th>
@@ -72,40 +73,26 @@
 
         <tbody>
 
-            @forelse($file->transfers as $transfer)
-
+            @forelse($file->movements as $movement)
             <tr>
+                <td>{{ $movement->created_at }}</td>
 
-                <td>
-                    {{ $transfer->created_at }}
-                </td>
+                <td>{{ ucfirst($movement->action) }}</td>
 
-                <td>
-                    {{ $transfer->fromUser->name ?? 'N/A' }}
-                </td>
+                <td>{{ $movement->fromUser->name ?? 'N/A' }}</td>
 
-                <td>
-                    {{ $transfer->toUser->name ?? 'N/A' }}
-                </td>
+                <td>{{ $movement->toUser->name ?? 'N/A' }}</td>
 
-                <td>
-                    {{ $transfer->fromDepartment->name ?? 'N/A' }}
-                </td>
+                <td>{{ $movement->fromDept->name ?? 'N/A' }}</td>
 
-                <td>
-                    {{ $transfer->toDepartment->name ?? 'N/A' }}
-                </td>
+                <td>{{ $movement->toDept->name ?? 'N/A' }}</td>
 
-                <td>
-                    {{ $transfer->remarks }}
-                </td>
-
+                <td>{{ $movement->remarks }}</td>
             </tr>
-
             @empty
 
             <tr>
-                <td colspan="6">
+                <td colspan="7">
                     No transfer history available.
                 </td>
             </tr>

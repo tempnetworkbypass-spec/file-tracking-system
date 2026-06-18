@@ -18,14 +18,14 @@
             <th>File Number</th>
             <th>Remarks</th>
             <th>Status</th>
+            <th>View</th>
             <th>Transfer</th>
 
-
             @if(auth()->user()->role == 'admin' || auth()->user()->role == 'super_admin')
-
             <th>Timeline</th>
             @endif
         </tr>
+
 
         @foreach($files as $file)
         <tr>
@@ -37,6 +37,7 @@
             <td>{{ $file->file_number }}</td>
 
             <td>{{ $file->remarks }}</td>
+
 
             <td>
                 @if($file->status == 'active')
@@ -51,20 +52,24 @@
             </td>
 
             <td>
+                <a href="{{ route('files.show', $file->id) }}">
+                    View
+                </a>
+            </td>
+
+            <td>
                 <a href="{{ route('files.transfer.create', $file->id) }}">
                     Transfer
                 </a>
             </td>
 
+            @if(auth()->user()->role == 'admin' || auth()->user()->role == 'super_admin')
             <td>
-
-                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'super_admin')
                 <a href="{{ route('admin.files.timeline', $file->id) }}">
                     Timeline
                 </a>
-                @endif
-
             </td>
+            @endif
 
         </tr>
         @endforeach

@@ -9,7 +9,7 @@ use App\Models\FileMovement;
 use App\Models\FileRecord;
 use App\Models\FileTransfer;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 
 class TransferApprovalController extends Controller
 {
@@ -48,6 +48,7 @@ class TransferApprovalController extends Controller
         $request = TransferRequest::findOrFail($id);
 
         $file = FileRecord::findOrFail($request->file_id);
+        $targetUser = User::findOrFail($request->target_user);
 
         $fromUser = $file->current_user_id;
         $fromDept = $file->department_id;
@@ -57,6 +58,15 @@ class TransferApprovalController extends Controller
             'sender_id' => $request->requested_by,
             'receiver_id' => $request->target_user,
             'remarks' => 'Approved by Admin'
+        ]);
+        FileMovement::create([
+            'file_id' => $file->id,
+            'from_user' => auth()->id(),
+            'to_user' => $targetUser->id,
+            'from_department' => auth()->user()->department_id,
+            'to_department' => $targetUser->department_id,
+            'action' => 'transferred',
+            'remarks' => $request->remarks
         ]);
 
         $file->update([

@@ -7,6 +7,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FileMovement;
 
 class FileRecordController extends Controller
 {
@@ -45,12 +46,21 @@ class FileRecordController extends Controller
             ? $request->department_id
             : auth()->user()->department_id;
 
-        FileRecord::create([
+       $file= FileRecord::create([
             'created_by' => auth()->id(),
             'department_id' => $departmentId,
             'file_name' => $request->file_name,
             'file_number' => 'FILE-' . strtoupper(Str::random(10)),
             'remarks' => $request->remarks,
+        ]);
+        FileMovement::create([
+            'file_id' => $file->id,
+            'from_user' => auth()->id(),
+            'to_user' => auth()->id(),
+            'from_department' => $departmentId,
+            'to_department' => $departmentId,
+            'action' => 'created',
+            'remarks' => 'File created'
         ]);
 
         return redirect()
@@ -60,14 +70,15 @@ class FileRecordController extends Controller
 
     public function show($id)
     {
+        
         $file = FileRecord::with([
             'department',
             'creator',
             'currentHolder',
-            'transfers.fromUser',
-            'transfers.toUser',
-            'transfers.fromDepartment',
-            'transfers.toDepartment'
+            'movements.fromUser',
+            'movements.toUser',
+            'movements.fromDept',
+            'movements.toDept'
         ])->findOrFail($id);
 
         $user = auth()->user();
@@ -82,3 +93,4 @@ class FileRecordController extends Controller
         return view('files.show', compact('file'));
     }
 }
+
